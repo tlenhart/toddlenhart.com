@@ -15,3 +15,5 @@ Each component should be separated out in ...
 
 /build should be generated when deployed/built/maybe even when testing. It shouldn't be added to the repository, (at least for now).
 /build probably shouldn't have server stuff in it, (since the build folder should be the one used to serve the files.)
+
+Testing deployment.
