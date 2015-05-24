@@ -1,0 +1,6 @@
+Stuff like bootstrap should go here, BUT care must be taken when building/compiling for production and ignore this folder.
+ Files should be pulled from here during development and live reload.
+
+ But, on the other hand, these libraries should be installed with npm, so they shouldn't even be in here, only in the build folder.
+
+ Might just need to delete this folder at some point.
