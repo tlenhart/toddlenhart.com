@@ -41,4 +41,13 @@ gulp.task('sass:watch', function() {
 // Need stuff for generating sourcemaps.
 // https://www.npmjs.com/package/gulp-sass
 
+
+// Need build process. Should compile sass, minify, uglify, cdnify copy html, css, js to /build.
+
 gulp.task('default', ['connect', 'watch', 'sass:watch']);
+
+gulp.task('build', []);
+
+
+// Push to gh-pages perhaps, or maybe just push to github, or both perhaps.
+gulp.task('deploy', []);

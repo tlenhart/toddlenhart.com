@@ -46,7 +46,7 @@
                 </div>
             </div>
 
-            <div class="inner cover">
+            <div id="inner-cover" class="inner cover">
                 <h1 class="cover-heading">Cover your page.</h1>
                 <p class="lead">Work in progress.<br>Using (or planning to use) HTML, CSS, SASS, JavaScript, AngularJS</p>
                 <p class="lead">
@@ -96,6 +96,13 @@
             document.querySelector('head').appendChild(msViewportStyle)
         }
     })();
+</script>
+<script>
+    // Test script for trying things.
+    var field = document.createElement("input");
+    field.type = "check";
+    field.className = "input email";
+    document.getElementsByClassName("cover")[0].appendChild(field);
 </script>
 </body>
 </html>
