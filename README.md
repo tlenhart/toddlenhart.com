@@ -1,6 +1,8 @@
 # toddlenhart.com
 Website for toddlenhart.com
 
+> A lot of the stuff below is just notes for myself and things I need to do for the website. 
+
 Using a couple of guides for structure of the angular app/website:
 [https://github.com/johnpapa/ng-demos/tree/master/modular](https://github.com/johnpapa/ng-demos/tree/master/modular)
 [https://github.com/johnpapa/ng-demos](https://github.com/johnpapa/ng-demos)
