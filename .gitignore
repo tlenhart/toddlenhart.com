@@ -27,8 +27,8 @@ build/Release
 
 # Dependency directory
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
-node_modules
+node_modules/
 
 # Files output in development and production. Site is served from this folder on the server.
 # May end up removing at some point and just pushing the build folder as well.
-build
+build/
