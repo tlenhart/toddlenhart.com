@@ -5,8 +5,10 @@
 
 var gulp = require('gulp');
 var connect = require('gulp-connect');
+var sass = require('gulp-sass');
 
 
+// Live reload
 gulp.task('connect', function(){
   connect.server({
     root: 'src/client',
@@ -23,4 +25,20 @@ gulp.task('watch', function () {
   gulp.watch(['./src/client/*.html'], ['html']);
 });
 
-gulp.task('default', ['connect', 'watch']);
+
+// SASS compilation
+gulp.task('sass', function () {
+  gulp.src('./src/client/assets/sass/**/*.scss')
+    .pipe(sass().on('err', sass.logError))
+    .pipe(gulp.dest('./src/client/assets/css'))
+    .pipe(connect.reload());
+});
+
+gulp.task('sass:watch', function() {
+  gulp.watch('./src/client/assets/sass/**/*.scss', ['sass']);
+});
+
+// Need stuff for generating sourcemaps.
+// https://www.npmjs.com/package/gulp-sass
+
+gulp.task('default', ['connect', 'watch', 'sass:watch']);
