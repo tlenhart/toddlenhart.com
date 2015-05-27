@@ -10,8 +10,14 @@ var sass = require('gulp-sass');
 
 var concat = require('gulp-concat');
 
+var uglify = require('gulp-uglify');
+
+var uncss = require('gulp-uncss');
+var prefixer = require('gulp-autoprefixer');
+var minifyCss = require('gulp-minify-css');
+
+
 var glob = require('glob');
-var StreamQueue = require('streamqueue');
 
 
 // Live reload
@@ -22,13 +28,19 @@ gulp.task('connect', function(){
   });
 });
 
+// Don't think this is working for html files other than index.html
 gulp.task('html', function() {
-  gulp.src('./src/client/*.html')
+  gulp.src('./src/client/**/*.html')
     .pipe(connect.reload());
 });
 
-gulp.task('watch', function () {
-  gulp.watch(['./src/client/*.html'], ['html']);
+gulp.task('html:watch', function () {
+  gulp.watch(['./src/client/**/*.html'], ['html']);
+});
+
+gulp.task('build-html', function () {
+  gulp.src('./src/client/**/*.html')
+    .pipe(gulp.dest('./build/client/'));
 });
 
 
@@ -81,9 +93,29 @@ gulp.task('js-min', ['js'], function () {
   // Don't forget the html/templates, css (sass), js (ng-min, ... other Angular minification),
   // and any possible images.
   // Make sure any ordering is properly accounted for. (For the Angular code).
+  // Don't forget ng-min
   // Also going to want to minify everything (including images)
   // Convert the library links in the html to cdn versions.
-  gulp.src('./src/client/assets/bundles')
+  // Browserify maybe goes here as well...
+
+  //gulp.src('./src/client/assets/bundles')
+  //  .pipe()
+});
+
+gulp.task('css-min', ['sass'], function () {
+  gulp.src(['./src/client/assets/css/cover.css',
+            './src/client/assets/css/app.css',
+            '.src/client/assets/css/core.css'])
+    // Put the start of sourcmaps here. Might need to go after the concat. Don't forget the write.
+    .pipe(concat('app.css'))
+    // Make sure the html is generated/pulled into build before enabling uncss. And htat css loads are pointed correctly.
+    //.pipe(uncss({
+    //  html: ['./build/**/*.html']
+    //}))
+    // Consider using gulp-csso here.
+    .pipe(minifyCss())
+    // Don't forget autoprefixer
+    .pipe(gulp.dest('./build/client/assets/css/'));
 });
 
 
@@ -91,14 +123,14 @@ gulp.task('js-min', ['js'], function () {
 
 // Might want to add sass and js things to default so that they are run when gulp is first run.
 
-gulp.task('default', ['connect', 'watch', 'sass:watch', 'js:watch']);
+gulp.task('default', ['connect', 'html:watch', 'sass:watch', 'js:watch']);
 
 // gulp develop task. Include the watchers and concatenations.
-gulp.task('dev', ['connect', 'watch', 'sass:watch', 'js:watch']);
+gulp.task('dev', ['connect', 'html:watch', 'sass:watch', 'js:watch']);
 
 
 // Include task for bundling all js files.
-gulp.task('build', ['js-min', 'css-min']);
+gulp.task('build', ['build-html', 'js-min', 'css-min']);
 
 
 // Push to gh-pages perhaps, or maybe just push to github, or both perhaps.
