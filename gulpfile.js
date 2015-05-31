@@ -17,6 +17,8 @@ var autoprefixer = require('gulp-autoprefixer');
 var minifyCss = require('gulp-minify-css');
 var cdnizer = require('gulp-cdnizer');
 
+var htmlreplace = require('gulp-html-replace');
+
 
 var glob = require('glob');
 
@@ -39,13 +41,36 @@ gulp.task('html:watch', function () {
   gulp.watch(['./src/client/**/*.html'], ['html']);
 });
 
+// Move libraries from /node_modules to /src/client/assets/lib/
+// Doing this to help with deployment where a library does not load from the cdn.
+gulp.task('load-libs', function () {
+  gulp.src([
+    './node_modules/angular/angular.js',
+    './node_modules/angular-route/angular-route.js'
+  ])
+    // Might want to add gulp-newer here.
+    .pipe(gulp.dest('./src/client/assets/lib/angular/'));
+});
+
 gulp.task('build-html', function () {
-  gulp.src('./src/client/**/*.html')
+  gulp.src('./src/client/**/*.html', {base: "."})
+    //.pipe(cdnizer([
+    //  'google:angular@1.3.15',
+    //  'google:angular-route@1.3.15'
+    //]))
+    .pipe(gulp.dest('./build/client/'));
+});
+
+gulp.task('cdnify', ['build-html', 'load-libs'], function() {
+  gulp.src('./build/client/index.html')
     .pipe(cdnizer([
       'google:angular@1.3.15',
       'google:angular-route@1.3.15'
     ]))
-    .pipe(gulp.dest('./build/client/'));
+    .pipe(gulp.dest('./build/client'));
+  // Copy over the library assets folder (for fallback when cdns fail.)
+  gulp.src('./src/client/assets/lib/**/*')
+    .pipe(gulp.dest('./build/client/assets/lib/'));
 });
 
 
@@ -125,30 +150,23 @@ gulp.task('css-min', ['sass'], function () {
     .pipe(gulp.dest('./build/client/assets/css/'));
 });
 
-gulp.task('cdnify', ['build-html'], function() {
-  gulp.src('./build/client/index.html')
-    .pipe(cdnizer([
-      'google:angular-route@1.3.15',
-      'google:angular@1.3.15'
-    ]))
-    .pipe(gulp.dest('./build/client'));
-});
+
 
 
 // Need build process. Should compile sass, minify, uglify, cdnify copy html, css, js to /build.
 
 // Might want to add sass and js things to default so that they are run when gulp is first run.
 
-gulp.task('default', ['connect', 'html:watch', 'sass:watch', 'js:watch']);
+gulp.task('default', ['connect', 'html:watch', 'sass:watch', 'js:watch', 'load-libs']);
 
 // gulp develop task. Include the watchers and concatenations.
-gulp.task('dev', ['connect', 'html:watch', 'sass:watch', 'js:watch']);
+gulp.task('dev', ['connect', 'html:watch', 'sass:watch', 'js:watch', 'load-libs']);
 
 
 // Include task for bundling all js files.
 // build is responsible for compiling the code and testing it on the test server.
 // The dist task is used to take stuff from build and put in the /dist folder for production.
-gulp.task('build', ['build-html', 'js-min', 'css-min']);
+gulp.task('build', ['build-html', 'js-min', 'css-min', 'load-libs']);
 
 
 gulp.task('tests', ['build'], function () {

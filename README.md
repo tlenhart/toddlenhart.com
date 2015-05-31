@@ -37,3 +37,28 @@ Steps to building/running the website. (This is going to change.)
  2. Generate sourcemaps for .js files.
  3. Live reload using Browsersync? or something else...
  4. ...
+ 
+# Changes that need to be made to js build process
+ 1. Bundles need to move to /build
+ 2. Or, they need to combined and added to the html file (replaced with gulp-html-replace)
+ 3. Might want to put all of the individual js files in index.html (or other html files) 
+    and bundle them up for /build.
+ 4. Keeping it the way it is though (with bundles in /src, and combined in /build), might be the better approach.
+ 
+Have to decide where and when we are going to copy the html files over to /build and /dist.
+Decide when to copy the libs over from /node_modules/ to assets/lib/
+Decide when to cdnify. Probably when building.
+
+The key to remember here is that the build folder is used for testing, especially on the server.
+Regular development should occur completely within /src.
+  Gulp live reloading should also use files only in /src.
+  Everything should then be compiled for /build
+  
+/dist should be an exact copy of /build
+
+# Once tests pass in /build, move all files to /dist.
+
+### cdnify task needs to change.
+cdnify and bundle other js files at the same time. (When moving to /build).
+Change load-libs to load-srclibs or load-devlibs
+Add load-build-libs to move the libs from /src to /build
