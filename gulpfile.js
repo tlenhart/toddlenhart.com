@@ -41,6 +41,10 @@ gulp.task('html:watch', function () {
 
 gulp.task('build-html', function () {
   gulp.src('./src/client/**/*.html')
+    .pipe(cdnizer([
+      'google:angular@1.3.15',
+      'google:angular-route@1.3.15'
+    ]))
     .pipe(gulp.dest('./build/client/'));
 });
 
@@ -144,7 +148,7 @@ gulp.task('dev', ['connect', 'html:watch', 'sass:watch', 'js:watch']);
 // Include task for bundling all js files.
 // build is responsible for compiling the code and testing it on the test server.
 // The dist task is used to take stuff from build and put in the /dist folder for production.
-gulp.task('build', ['build-html', 'js-min', 'css-min', 'cdnify']);
+gulp.task('build', ['build-html', 'js-min', 'css-min']);
 
 
 gulp.task('tests', ['build'], function () {
