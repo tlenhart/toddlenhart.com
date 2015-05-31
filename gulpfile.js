@@ -128,8 +128,8 @@ gulp.task('css-min', ['sass'], function () {
 gulp.task('cdnify', ['build-html'], function() {
   gulp.src('./build/client/index.html')
     .pipe(cdnizer([
-      'google:angular@1.3.15',
-      'google:angular-route@1.3.15'
+      'google:angular-route@1.3.15',
+      'google:angular@1.3.15'
     ]))
     .pipe(gulp.dest('./build/client'));
 });
